@@ -23,5 +23,6 @@ fn main() {
         let pressed_keys = utils::keyboard::get_keypress_map(&mut globals);
         println!("{:?}", pressed_keys);
         std::thread::sleep(Duration::from_millis(10));
+
     }
 }
