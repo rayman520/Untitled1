@@ -1,22 +1,27 @@
+extern crate sdl2;
 
 pub fn init() -> super::Globals {
-
     return super::Globals{
         sdl: init_sdl(),
     };
 }
 
+use utils::CheckResult;
+
 fn init_sdl() -> super::SdlVars {
-    let mut sdl_vars = super::SdlVars {
-        sdl: sdl2::init().unwrap_or_else(super::utils::exit),
-        video_subsystem: nil,
-        window: nil,
-        event_pump: nil,
-    };
-    sdl_vars.video_subsystem = sdl_vars.sdl.video().unwrap_or_else(super::utils::exit);
-    sdl_vars.window = sdl_vars.video_subsystem
+    let tmp_sdl = sdl2::init().check_result();
+    let tmp_event_pump = tmp_sdl.event_pump().check_result();
+    let tmp_video_subsystem = tmp_sdl.video().check_result();
+    let tmp_window = tmp_video_subsystem
         .window("Game", 900, 700)
-        .resizable().build().unwrap_or_else(super::utils::exit);
-    sdl_vars.event_pump = sdl_vars.sdl.event_pump().unwrap_or_else(super::utils::exit);
+        .resizable().build().check_result();
+
+
+    let mut sdl_vars = super::SdlVars {
+        sdl: tmp_sdl,
+        event_pump: tmp_event_pump,
+        video_subsystem: tmp_video_subsystem,
+        window: tmp_window,
+    };
     return sdl_vars
 }
